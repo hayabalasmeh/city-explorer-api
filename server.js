@@ -45,7 +45,7 @@ server.get('/',(req,resp)=>{
 server.get('/weather',requestingWeatherData);
 server.get('/movies',requestingMovieName);
 
-async function requestingWeatherData (request,response){
+ function requestingWeatherData (request,response){
     let latParameter = request.query.lat;
     let lonParameter = request.query.lon;
     // let cityName= request.query.searchQuery;
