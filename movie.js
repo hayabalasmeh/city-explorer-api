@@ -4,6 +4,8 @@ require('dotenv').config();
 const axios = require('axios');
 module.exports = MovieDisplay;
 const key2 = process.env.MOVIE_API_KEY;
+let memory={};
+
 
 class Movie {
     constructor(title,overview,averageVotes,totalVotes,link,popularity,realeasedDate){
@@ -24,7 +26,12 @@ function MovieDisplay(request,response){
     //localhost:3030/weather?lat=31.9515694&lon=35.9239625
     let movieURL = `https://api.themoviedb.org/3/search/movie?api_key=${key2}&query=${cityName}`;
 
-    
+    if(memory[cityName] !==undefined){
+        console.log('from memory')
+        response.send(memory[cityName])
+
+    }
+    else{
          axios.get(movieURL).then(axiosRes =>{
         
            const moviesList= axiosRes.data.results.map(item =>{
@@ -32,10 +39,12 @@ function MovieDisplay(request,response){
            return new Movie (item.title,item.overview,item.vote_average,item.vote_count,imageUrl,item.popularity,item.release_date) ;
            
            })
-       
+       memory[cityName]=moviesList;
+       console.log('from api')
         response.send(moviesList);
     })
     .catch(error=>{
         response.send(`error is ${error}`);
        } )
+    }
 }     
